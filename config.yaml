@@ -1,0 +1,18 @@
+behavior:
+  read_only: false
+  autocommit: true
+
+user:
+  name: barpy
+  password: ""
+
+listener:
+  host: 0.0.0.0
+  port: 3306
+  max_connections: 1
+  read_timeout_millis: 28800000
+  write_timeout_millis: 28800000
+
+databases:
+  - {path: cocktails, name: cocktails}
+  - {path: barpydb, name: barpydb}
