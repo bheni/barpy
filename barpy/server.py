@@ -1,4 +1,3 @@
-from flask import request
 from threading import Lock
 
 
