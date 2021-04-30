@@ -1,20 +1,49 @@
 <html>
-  <head><title></title></head>
+  <head>
+    <title></title>
+    <style>
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+#content {
+  opacity: 0
+  background-color: #e3f2fd;
+  flex: 1;
+  padding: 20px;
+}
+
+#footer {
+  text-align: center;
+  background-color: #606060;
+  padding: 20px;
+}
+    </style>
+  </head>
   <body>
-  	<form action="/fluids" method="post">
-    {% for fluid in fluids %}
-      <label>Container {{ loop.index0 }}:</label>
-      <select name="fluid{{ loop.index0 }}" id="fluid{{ loop.index0 }}">
-      {% for ingredient in ingredients %}
-        {% if fluid == ingredient.id %}
-        <option value="{{ ingredient.id }}" selected="true">{{ ingredient.display_name }}</option>
-        {% else %}
-        <option value="{{ ingredient.id }}">{{ ingredient.display_name }}</option>
-        {% endif %}
+    <div id="content">
+      <form action="/fluids" method="post">
+      {% for fluid in fluids %}
+        <label>Container {{ loop.index0 }}:</label>
+        <select name="fluid{{ loop.index0 }}" id="fluid{{ loop.index0 }}">
+        {% for ingredient in ingredients %}
+          {% if fluid == ingredient.id %}
+          <option value="{{ ingredient.id }}" selected="true">{{ ingredient.display_name }}</option>
+          {% else %}
+          <option value="{{ ingredient.id }}">{{ ingredient.display_name }}</option>
+          {% endif %}
+        {% endfor %}
+        </select><br>
       {% endfor %}
-      </select><br>
-    {% endfor %}
-    <input type="submit" value="Submit"/>
-  	</form>
+      <input type="submit" value="Submit"/>
+      </form>
+    </div>
+    <footer id="footer"><a href="../">home</a></footer>
   </body>
 </html>
