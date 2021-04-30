@@ -1,4 +1,5 @@
 import argparse
+import datetime
 
 from time import sleep
 from threading import Thread
@@ -15,14 +16,25 @@ class ButtonThread(Thread):
         self.lhw = lhw
         self.server = server
 
+        with self.lhw as hardware:
+            self.on_start = [None] * hardware.num_fluids()
+
     def run(self):
         while not self.server.is_done():
             with self.lhw as hardware:
                 for i in range(hardware.num_fluids()):
                     if hardware.button_is_pressed(i):
-                        hardware.pump_on(i)
+                        if self.on_start[i] is None:
+                            print("%d on" % i)
+                            self.on_start[i] = datetime.datetime.now()
+                            hardware.pump_on(i)
                     else:
-                        hardware.pump_off(i)
+                        if self.on_start[i] is not None:
+                            start = self.on_start[i]
+                            self.on_start[i] = None
+                            diff = datetime.datetime.now() - start
+                            print("%d off after %f seconds" % (i, diff.total_seconds()))
+                            hardware.pump_off(i)
             sleep(0.1)
 
 
@@ -34,7 +46,7 @@ db = DB()
 
 if args.hardware == 'debug':
     print("Running on debug hardware")
-    locked_hardware = HardwareLock(TestBarHardware(8))
+    locked_hardware = HardwareLock(TestBarHardware(6))
 else:
     locked_hardware = HardwareLock(BarPiZero())
 
@@ -44,6 +56,6 @@ t = ButtonThread(locked_hardware, server)
 t.start()
 
 try:
-    app.run()
+    app.run(host='0.0.0.0', port=80)
 except KeyboardInterrupt:
     server.shutdown()

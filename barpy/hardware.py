@@ -48,8 +48,8 @@ class BarPi(BarHardware):
 
 
 class BarPiZero(BarPi):
-    PUMP_PINS = [26, 19, 13, 6, 5, 11, 9, 10]
-    BUTTON_PINS = [21, 20, 16, 12, 7, 8, 22, 27]
+    PUMP_PINS = [13, 6, 5, 11, 9, 10]
+    BUTTON_PINS = [21, 20, 16, 12, 7, 8]
 
     def __init__(self):
         super().__init__(BarPiZero.PUMP_PINS, BarPiZero.BUTTON_PINS)

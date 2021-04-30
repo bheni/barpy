@@ -15,27 +15,27 @@ class Recipes(object):
         makable_recipes = db.query_possible_recipes()
 
         self.recipes = {}
-        for recipe_ingrediant in makable_recipes:
-            recipe_name = recipe_ingrediant['recipe_name']
+        for recipe_ingredient in makable_recipes:
+            recipe_name = recipe_ingredient['recipe_name']
 
             if recipe_name not in self.recipes:
-                ingrediants = []
+                ingredients = []
             else:
-                ingrediants = self.recipes[recipe_name]
+                ingredients = self.recipes[recipe_name]
 
-            ingrediants.append(recipe_ingrediant)
-            self.recipes[recipe_name] = ingrediants
+            ingredients.append(recipe_ingredient)
+            self.recipes[recipe_name] = ingredients
 
     def get_fluid_idx_to_ozs(self, recipe_name):
         fluid_idx_to_oz = {}
 
         if recipe_name in self.recipes:
-            recipe_ingrediants = self.recipes[recipe_name]
+            recipe_ingredients = self.recipes[recipe_name]
 
-            for ingrediant in recipe_ingrediants:
-                idx = int(ingrediant['fluid_idx'])
-                amount = ingrediant['amount']
-                unit = ingrediant['amount_unit']
+            for ingredient in recipe_ingredients:
+                idx = int(ingredient['fluid_idx'])
+                amount = ingredient['amount']
+                unit = ingredient['amount_unit']
                 ozs = to_ounces(unit, amount)
                 fluid_idx_to_oz[idx] = ozs
 

@@ -1,0 +1,8 @@
+[unit]
+Description=dolt sql-server command for barpy databases
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/dev/barpy
+ExecStart=/home/pi/go/bin/dolt sql-server --config config.yaml
+

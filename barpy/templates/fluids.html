@@ -1,0 +1,20 @@
+<html>
+  <head><title></title></head>
+  <body>
+  	<form action="/fluids" method="post">
+    {% for fluid in fluids %}
+      <label>Container {{ loop.index0 }}:</label>
+      <select name="fluid{{ loop.index0 }}" id="fluid{{ loop.index0 }}">
+      {% for ingredient in ingredients %}
+        {% if fluid == ingredient.id %}
+        <option value="{{ ingredient.id }}" selected="true">{{ ingredient.display_name }}</option>
+        {% else %}
+        <option value="{{ ingredient.id }}">{{ ingredient.display_name }}</option>
+        {% endif %}
+      {% endfor %}
+      </select><br>
+    {% endfor %}
+    <input type="submit" value="Submit"/>
+  	</form>
+  </body>
+</html>

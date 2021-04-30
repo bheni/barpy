@@ -2,7 +2,7 @@ from time import sleep
 
 
 class PumpController(object):
-    def     __init__(self, db, recipes, locked_hardware):
+    def __init__(self, db, recipes, locked_hardware):
         self.recipes = recipes
         self.locked_hardware = locked_hardware
 

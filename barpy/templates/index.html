@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+html {
+  height: 100%
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-image:url("static/bg.jpeg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.block-button {
+  display: block;
+  width: 100%;
+  border: none;
+  background-color: #04AA6D;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+</head>
+<body background="static/bg.jpeg">
+
+<!-- Buttons -->
+{% for drink in drinks %}
+  <button id="drink-{{ loop.index0 }}" class="block-button">{{ drink.display_name }}</button></br>
+{% endfor %}
+
+<!-- Confirm Modal -->
+<div id="confirm-modal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p id="confirm-modal-text"></span></p>
+    <button id="ok-button">OK</button>
+    <button id="cancel-button">Cancel</button>
+  </div>
+
+</div>
+
+<!-- Making Drink Modal -->
+<div id="making-drink-modal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <p id="making-drink-modal-text"></span></p>
+  </div>
+
+</div>
+
+<script>
+var drinkID = ""
+var drinkName = ""
+
+// Get confirm modal components
+var confirmModal = document.getElementById("confirm-modal");
+var confirmModalText = document.getElementById("confirm-modal-text");
+var confirmModalOkButton = document.getElementById("ok-button");
+var confirmModalCancelButton = document.getElementById("cancel-button");
+
+var makingDrinkModal = document.getElementById("making-drink-modal")
+var makingDrinkModalText = document.getElementById("making-drink-modal-text")
+
+<!-- Button variables and onclick funcs -->
+{% for drink in drinks %}
+btn{{ loop.index0 }} = document.getElementById("drink-{{ loop.index0 }}")
+btn{{ loop.index0 }}.onclick = function() {
+  drinkID = "{{ drink.id }}"
+  drinkName = "{{ drink.display_name }}";
+  confirmModalText.innerHTML = "Make a " + drinkName;
+  confirmModal.style.display = "block";
+}
+{% endfor %}
+
+// When the user clicks on ok
+confirmModalOkButton.onclick = function() {
+  makingDrinkModalText.innerHTML = "Making " + drinkName
+  confirmModal.style.display = "none";
+  makingDrinkModal.style.display = "block";
+
+  var url = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + '/make';
+  var data = JSON.stringify({"cocktail": drinkID});
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        makingDrinkModal.style.display = "none"
+      }
+  };
+  xhr.send(data);
+}
+
+// When the user clicks cancel
+confirmModalCancelButton.onclick = function() {
+  confirmModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == confirmModal) {
+    confirmModal.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>

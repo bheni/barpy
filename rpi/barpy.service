@@ -1,0 +1,7 @@
+[unit]
+Description=barpy service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/dev/barpy
+ExecStart=/usr/bin/python3 -m barpy

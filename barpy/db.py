@@ -42,19 +42,19 @@ class DoltConnection(object):
 
 class DB(object):
     possible_recipes_query = '''
-SELECT cocktails.recipe_ingrediants.*, barpydb.fluids.idx AS fluid_idx 
-FROM cocktails.recipe_ingrediants 
-JOIN barpydb.fluids ON cocktails.recipe_ingrediants.ingrediant_name = barpydb.fluids.fluid 
+SELECT cocktails.recipe_ingredients.*, barpydb.fluids.idx AS fluid_idx 
+FROM cocktails.recipe_ingredients 
+JOIN barpydb.fluids ON cocktails.recipe_ingredients.ingredient_name = barpydb.fluids.fluid 
 WHERE recipe_name IN (
     SELECT we_need.recipe_name FROM (
         SELECT recipe_name, COUNT(recipe_name) AS cnt
-        FROM cocktails.recipe_ingrediants 
+        FROM cocktails.recipe_ingredients 
         GROUP BY recipe_name
     ) we_need
     JOIN (
         SELECT recipe_name, COUNT(recipe_name) AS cnt
-        FROM cocktails.recipe_ingrediants ri
-        WHERE ri.ingrediant_name IN (SELECT fluid FROM barpydb.fluids) 
+        FROM cocktails.recipe_ingredients ri
+        WHERE ri.ingredient_name IN (SELECT fluid FROM barpydb.fluids) 
         GROUP BY recipe_name
     ) we_have
     ON we_have.recipe_name = we_need.recipe_name and we_have.cnt = we_need.cnt
@@ -63,11 +63,19 @@ WHERE recipe_name IN (
     get_pump_info_query = '''
 SELECT *
 FROM barpydb.pumps
-ORDER BY idx ASC'''
+ORDER BY idx ASC;'''
+
+    fluid_names = 'SELECT fluid FROM barpydb.fluids'
+    all_ingredient_name_query = 'SELECT name FROM cocktails.ingredients;'
 
     def __init__(self):
-        self.conn = DoltConnection(user="barpy", database="cocktails", auto_commit=True)
-        self.conn.connect()
+        while True:
+            try:
+                self.conn = DoltConnection(user="barpy", database="cocktails", auto_commit=True)
+                self.conn.connect()
+                return
+            except:
+                pass
 
     def query_possible_recipes(self):
         rows, count = self.conn.query(DB.possible_recipes_query)
@@ -76,3 +84,20 @@ ORDER BY idx ASC'''
     def get_pump_info(self):
         rows, count = self.conn.query(DB.get_pump_info_query)
         return rows
+
+    def get_ingredients(self):
+        rows, count = self.conn.query(DB.all_ingredient_name_query)
+        return rows
+
+    def get_fluids(self):
+        rows, count = self.conn.query(DB.fluid_names)
+        return rows
+
+    def update_fluids(self, idx_to_fluids):
+        query_str_template = "UPDATE barpydb.fluids SET fluid = '%s' where idx = %d"
+        total_count = 0
+        for idx, fluid in idx_to_fluids.items():
+            rows, count = self.conn.query(query_str_template % (fluid, idx))
+            total_count += count
+
+        return total_count
