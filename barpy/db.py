@@ -101,3 +101,13 @@ ORDER BY idx ASC;'''
             total_count += count
 
         return total_count
+
+    def query_pins(self):
+        query_str = "SELECT * FROM pumps;"
+        rows, count = self.conn.query(query_str)
+
+        pump_pins = [int(row['pin']) for row in rows]
+        button_pins = [int(row['button_pin']) for row in rows]
+
+        return pump_pins, button_pins
+

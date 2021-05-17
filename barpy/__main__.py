@@ -48,7 +48,7 @@ if args.hardware == 'debug':
     print("Running on debug hardware")
     locked_hardware = HardwareLock(TestBarHardware(6))
 else:
-    locked_hardware = HardwareLock(BarPiZero())
+    locked_hardware = HardwareLock(BarPiZero(), db)
 
 app.init(db, locked_hardware)
 server = Server(app)
