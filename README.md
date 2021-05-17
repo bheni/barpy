@@ -4,7 +4,7 @@
 git clone git@github.com:bheni/barpy.git
 cd barpy
 git-dolt fetch cocktails.git-dolt
-git-dolt fetch cocktails.git-dolt
+git-dolt fetch barpydb.git-dolt
 dolt sql-server --config config.yaml
 ```
 
